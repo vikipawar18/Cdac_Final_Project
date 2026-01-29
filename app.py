@@ -1,9 +1,16 @@
 import os
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from werkzeug.utils import secure_filename
 from prediction import predict_video
+from functools import wraps
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24) # Secret key for sessions
+
+# Mock user database
+users = {
+    "admin": "password123"
+}
 
 # Configuration
 UPLOAD_FOLDER = 'uploads'
@@ -24,9 +31,56 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# Authentication decorator
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/')
+@login_required
 def index():
     return render_template('index.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        data = request.get_json()
+        username = data.get('username')
+        password = data.get('password')
+        
+        if username in users and users[username] == password:
+            session['user'] = username
+            return jsonify({'message': 'Login successful'})
+        else:
+            return jsonify({'error': 'Invalid username or password'}), 401
+            
+    return render_template('login.html')
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    name = data.get('name')
+    
+    if not username or not password:
+        return jsonify({'error': 'Username and password required'}), 400
+        
+    if username in users:
+        return jsonify({'error': 'Username already exists'}), 400
+        
+    users[username] = password
+    session['user'] = username
+    return jsonify({'message': 'Signup successful'})
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('login'))
 
 @app.route('/predict', methods=['POST'])
 def predict():

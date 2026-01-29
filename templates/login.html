@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | TrueSight Deepfake Detection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="auth-page">
+    <div class="background-glow"></div>
+
+    <main class="auth-container">
+        <div class="auth-card">
+            <div class="logo">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>TrueSight</span>
+            </div>
+
+            <div class="auth-header">
+                <h1 id="auth-title">Welcome Back</h1>
+                <p id="auth-subtitle">Please enter your details to sign in.</p>
+            </div>
+
+            <form id="auth-form">
+                <div class="input-group" id="name-group" style="display: none;">
+                    <label for="name">Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" id="name" placeholder="John Doe">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="text" id="username" placeholder="admin" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="cta-button" id="auth-submit">
+                    <span>Sign In</span>
+                    <div class="loader" id="loader"></div>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p id="toggle-text">Don't have an account? <a href="#" id="toggle-auth">Sign Up</a></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>2026 CDAC AI. Powered by TensorFlow & OpenCV.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+
+</html>
